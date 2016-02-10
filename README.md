@@ -1,3 +1,5 @@
+This repository contains R code for working with the "Getting Started" kaggle competition, "Titanic: Machine Learning from Disaster". This contains some personal tweaks having forked from https://github.com/trevorstephens/titanic:
+
 Titanic: Machine Learning from Disaster - Getting Started With R
 ================================================================
 Trevor Stephens - January 2014
