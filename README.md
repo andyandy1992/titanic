@@ -1,4 +1,11 @@
-This repository contains R code for working with the "Getting Started" kaggle competition, "Titanic: Machine Learning from Disaster". This contains some personal tweaks having forked from https://github.com/trevorstephens/titanic:
+This repository contains R code for working with the "Getting Started" kaggle competition, "Titanic: Machine Learning from Disaster". This contains some personal tweaks having forked from https://github.com/trevorstephens/titanic (orginal README below).
+
+To run the tutorial scripts, first ```cp load.R.sample load.R``` and configure ```load.R``` with:
+- where your data is stored.
+- where you wish to store output files.
+- your working directory (i.e. when you have cloned this repository to).
+
+You can then create a new workspace by running ```load.R`` prior to running the tutorial scripts.
 
 Titanic: Machine Learning from Disaster - Getting Started With R
 ================================================================

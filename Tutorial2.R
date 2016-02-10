@@ -2,11 +2,6 @@
 # Titanic: Getting Started With R - Part 2: The gender-class model
 # Full guide available at http://trevorstephens.com/
 
-# Set working directory and import datafiles
-setwd("~/Kaggle/Titanic")
-train <- read.csv("train.csv")
-test <- read.csv("test.csv")
-
 # Look at gender patterns
 summary(train$Sex)
 prop.table(table(train$Sex, train$Survived))
@@ -19,7 +14,7 @@ test$Survived[test$Sex == 'female'] <- 1
 
 # Create submission dataframe and output to file
 submit <- data.frame(PassengerId = test$PassengerId, Survived = test$Survived)
-write.csv(submit, file = "gendermodel.csv", row.names = FALSE)
+write.csv(submit, file = file.path(outPath, "gendermodel.csv"), row.names = FALSE)
 
 # Look at age patterns
 summary(train$Age)
@@ -45,5 +40,5 @@ test$Survived[test$Sex == 'female' & test$Pclass == 3 & test$Fare >= 20] <- 0
 
 # Create submission dataframe and output to file
 submit <- data.frame(PassengerId = test$PassengerId, Survived = test$Survived)
-write.csv(submit, file = "genderclassmodel.csv", row.names = FALSE)
+write.csv(submit, file = file.path(outPath, "genderclassmodel.csv"), row.names = FALSE)
 

@@ -1,0 +1,16 @@
+# andyandy1992 - 10 Feb 2016
+# Titanic: Getting Started With R - Part 0: Loading the R environment
+# This script should be run prior to working with the other Tutorial scripts. It loads
+# the train/test data from afresh and ensures we are working in the correct directory.
+
+# Clear workspace
+rm(list=ls());cat("\014");dev.off(dev.list()["RStudioGD"])
+
+# Specify data and ouput paths.
+dataPath <- "/path/to/csvfiles"
+outPath <- "/some/output/path"
+
+# Set working directory and import datafiles
+setwd("~/git/kaggle/titanic")
+train <- read.csv(file.path(dataPath, "train.csv"))
+test <- read.csv(file.path(dataPath, "test.csv"))
