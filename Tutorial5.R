@@ -16,7 +16,7 @@ combi <- rbind(train, test)
 # Convert to a string
 combi$Name <- as.character(combi$Name)
 
-# Engineered variable: Title
+# ENGINEERED_VARIABLE1=Title
 combi$Title <- sapply(combi$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][2]})
 combi$Title <- sub(' ', '', combi$Title)
 # Combine small title groups
@@ -26,10 +26,10 @@ combi$Title[combi$Title %in% c('Dona', 'Lady', 'the Countess', 'Jonkheer')] <- '
 # Convert to a factor
 combi$Title <- factor(combi$Title)
 
-# Engineered variable: Family size
+# ENGINEERED_VARIABLE2=Family size
 combi$FamilySize <- combi$SibSp + combi$Parch + 1
 
-# Engineered variable: Family
+# ENGINEERED_VARIABLE3=Family
 combi$Surname <- sapply(combi$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][1]})
 combi$FamilyID <- paste(as.character(combi$FamilySize), combi$Surname, sep="")
 combi$FamilyID[combi$FamilySize <= 2] <- 'Small'
@@ -40,7 +40,9 @@ combi$FamilyID[combi$FamilyID %in% famIDs$Var1] <- 'Small'
 # Convert to a factor
 combi$FamilyID <- factor(combi$FamilyID)
 
-# Fill in Age NAs
+
+# RANDOMFOREST_STEP1: Ensure no missing data
+# Fill in Age NAs using a DT on the other (relevant) variables
 summary(combi$Age)
 Agefit <- rpart(Age ~ Pclass + Sex + SibSp + Parch + Fare + Embarked + Title + FamilySize, 
                 data=combi[!is.na(combi$Age),], method="anova")
@@ -57,7 +59,8 @@ summary(combi$Fare)
 which(is.na(combi$Fare))
 combi$Fare[1044] <- median(combi$Fare, na.rm=TRUE)
 
-# New factor for Random Forests, only allowed <32 levels, so reduce number
+# RANDOMFOREST_STEP2 (R) New factor for Random Forests: R only allows <32 levels, so reduce number
+# run str(combi) to establish how many levels exist for each predictor
 combi$FamilyID2 <- combi$FamilyID
 # Convert back to string
 combi$FamilyID2 <- as.character(combi$FamilyID2)
@@ -78,7 +81,7 @@ varImpPlot(fit)
 # Now let's make a prediction and write a submission file
 Prediction <- predict(fit, test)
 submit <- data.frame(PassengerId = test$PassengerId, Survived = Prediction)
-write.csv(submit, file = file.path(outPath, "firstforest.csv"), row.names = FALSE)
+write.csv(submit, file = file.path(outPath, "T5a_firstforest.csv"), row.names = FALSE)
 
 # Build condition inference tree Random Forest
 set.seed(415)
@@ -87,5 +90,4 @@ fit <- cforest(as.factor(Survived) ~ Pclass + Sex + Age + SibSp + Parch + Fare +
 # Now let's make a prediction and write a submission file
 Prediction <- predict(fit, test, OOB=TRUE, type = "response")
 submit <- data.frame(PassengerId = test$PassengerId, Survived = Prediction)
-write.csv(submit, file = file.path(outPath, "ciforest.csv"), row.names = FALSE)
-
+write.csv(submit, file = file.path(outPath, "T5b_ciforest.csv"), row.names = FALSE)

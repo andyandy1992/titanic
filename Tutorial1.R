@@ -5,7 +5,7 @@
 # Examine structure of dataframe
 str(train)
 
-# Look at number of people who survived
+# PREDICTOR1=Survived: Look at number of people who survived
 table(train$Survived)
 prop.table(table(train$Survived))
 
@@ -14,4 +14,4 @@ test$Survived <- rep(0, 418)
 
 # Create submission dataframe and output to file
 submit <- data.frame(PassengerId = test$PassengerId, Survived = test$Survived)
-write.csv(submit, file = file.path(outPath, "theyallperish.csv"), row.names = FALSE)
+write.csv(submit, file = file.path(outPath, "T1_theyallperish.csv"), row.names = FALSE)

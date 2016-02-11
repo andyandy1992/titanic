@@ -25,7 +25,7 @@ strsplit(combi$Name[1], split='[,.]')
 strsplit(combi$Name[1], split='[,.]')[[1]]
 strsplit(combi$Name[1], split='[,.]')[[1]][2]
 
-# Engineered variable: Title
+# ENGINEERED_VARIABLE1=Title
 combi$Title <- strsplit(combi$Name, split='[,.]')[[1]][2]  # Won't work!
 combi$Title <- sapply(combi$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][2]})
 combi$Title <- sub(' ', '', combi$Title)
@@ -38,13 +38,13 @@ combi$Title[combi$Title %in% c('Dona', 'Lady', 'the Countess', 'Jonkheer')] <- '
 # Convert to a factor
 combi$Title <- factor(combi$Title)
 
-# Engineered variable: Family size
-combi$FamilySize <- combi$SibSp + combi$Parch + 1
+# ENGINEERED_VARIABLE2=Family size
+combi$FamilySize <- combi$SibSp + combi$Parch + 1 # plus one for their own existence
 
-# Engineered variable: Family
+# ENGINEERED_VARIABLE3=Family (based on Family Name and Size to remedy common last names)
 combi$Surname <- sapply(combi$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][1]})
 combi$FamilyID <- paste(as.character(combi$FamilySize), combi$Surname, sep="")
-combi$FamilyID[combi$FamilySize <= 2] <- 'Small'
+combi$FamilyID[combi$FamilySize <= 2] <- 'Small' # we hypothesise that large families might have trouble sticking together in the panic
 # Inspect new feature
 table(combi$FamilyID)
 # Delete erroneous family IDs
@@ -58,7 +58,7 @@ combi$FamilyID <- factor(combi$FamilyID)
 train <- combi[1:891,]
 test <- combi[892:1309,]
 
-# Build a new tree with our new features
+# DECISIONTREE_PREDICTORS: Build a new tree with our NEW features
 fit <- rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked + Title + FamilySize + FamilyID,
              data=train, method="class")
 fancyRpartPlot(fit)
@@ -66,5 +66,4 @@ fancyRpartPlot(fit)
 # Now let's make a prediction and write a submission file
 Prediction <- predict(fit, test, type = "class")
 submit <- data.frame(PassengerId = test$PassengerId, Survived = Prediction)
-write.csv(submit, file = file.path(outPath, "engineeredfeaturestree.csv"), row.names = FALSE)
-
+write.csv(submit, file = file.path(outPath, "T4_engineeredfeaturestree.csv"), row.names = FALSE)
